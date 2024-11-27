@@ -1,6 +1,7 @@
 name: Cocotb Test
 
-on: [push, pull_request]
+on: 
+  push:
 
 jobs:
   test:
@@ -13,7 +14,7 @@ jobs:
     - name: Set up Python
       uses: actions/setup-python@v5
       with:
-        python-version: 3.X
+        python-version: 3.12
 
     - name: Install dependencies
       run: |
@@ -23,7 +24,23 @@ jobs:
     - name: Install Icarus Verilog
       run: |
         sudo apt-get update
-        sudo apt-get install -y iverilog
+        sudo apt-get install -y git autoconf g++ make
+        git clone https://github.com/steveicarus/iverilog.git
+        cd iverilog
+        git checkout v11-branch
+        sh autoconf.sh
+        ./configure
+        make -j$(nproc)
+        sudo make install
+        iverilog -V
+
+    - name: Clean previous build artifacts
+      run: |
+        make clean || true
+        rm -rf sim_build results.xml
 
     - name: Run cocotb tests
-      run: make
+      env:
+        COCOTB_REDUCED_LOG_FMT: 1
+      run: |
+        make
