@@ -2,6 +2,7 @@ name: Cocotb Test
 
 on: 
   push:
+  pull_request:
 
 jobs:
   test:
@@ -16,20 +17,10 @@ jobs:
       with:
         python-version: 3.12
 
-    - name: Install common dependencies
-      run: |
-        sudo apt-get update
-        sudo apt-get install -y git autoconf g++ make gperf flex bison
-
     - name: Install Verilator
       run: |
-        git clone https://github.com/verilator/verilator.git
-        cd verilator
-        git checkout v4.106
-        autoconf
-        ./configure
-        make -j$(nproc)
-        sudo make install
+        sudo apt-get update
+        sudo apt-get install -y verilator
         verilator --version
 
     - name: Clean previous build artifacts
