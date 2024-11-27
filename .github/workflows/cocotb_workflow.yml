@@ -7,6 +7,10 @@ jobs:
   test:
     runs-on: ubuntu-latest
 
+    strategy:
+      matrix:
+        simulator: [icarus, verilator]
+
     steps:
     - name: Checkout repository
       uses: actions/checkout@v4
@@ -16,15 +20,14 @@ jobs:
       with:
         python-version: 3.12
 
-    - name: Install dependencies
-      run: |
-        python -m pip install --upgrade pip
-        pip install -r requirements.txt
-
-    - name: Install Icarus Verilog
+    - name: Install common dependencies
       run: |
         sudo apt-get update
-        sudo apt-get install -y git autoconf g++ make gperf
+        sudo apt-get install -y git autoconf g++ make gperf flex bison
+
+    - name: Install Icarus Verilog
+      if: matrix.simulator == 'icarus'
+      run: |
         git clone https://github.com/steveicarus/iverilog.git
         cd iverilog
         git checkout v12-branch
@@ -33,6 +36,18 @@ jobs:
         make -j$(nproc)
         sudo make install
         iverilog -V
+
+    - name: Install Verilator
+      if: matrix.simulator == 'verilator'
+      run: |
+        git clone https://github.com/verilator/verilator.git
+        cd verilator
+        git checkout v4.106
+        autoconf
+        ./configure
+        make -j$(nproc)
+        sudo make install
+        verilator --version
 
     - name: Clean previous build artifacts
       run: |
@@ -43,4 +58,4 @@ jobs:
       env:
         COCOTB_REDUCED_LOG_FMT: 1
       run: |
-        make
+        make SIM=${{ matrix.simulator }}
