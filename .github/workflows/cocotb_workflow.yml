@@ -24,10 +24,10 @@ jobs:
     - name: Install Icarus Verilog
       run: |
         sudo apt-get update
-        sudo apt-get install -y git autoconf g++ make
+        sudo apt-get install -y git autoconf g++ make gperf
         git clone https://github.com/steveicarus/iverilog.git
         cd iverilog
-        git checkout v11-branch
+        git checkout v12-branch
         sh autoconf.sh
         ./configure
         make -j$(nproc)
