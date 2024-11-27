@@ -1,6 +1,6 @@
 <testsuites name="results">
   <testsuite name="all" package="all">
-    <property name="random_seed" value="1732683190" />
-    <testcase name="test_dff_simple" classname="tests.test_dff" file="/mnt/c/Users/sawam/Desktop/sandbox/tests/test_dff.py" lineno="12" time="0.0007998943328857422" sim_time_ns="31.001" ratio_time="38756.36909210134" />
+    <property name="random_seed" value="1732709694" />
+    <testcase name="test_dff_simple" classname="tests.test_dff" file="/mnt/c/Users/sawam/Desktop/sandbox/tests/test_dff.py" lineno="12" time="0.0023512840270996094" sim_time_ns="31.001" ratio_time="13184.710839991889" />
   </testsuite>
 </testsuites>

@@ -2,14 +2,11 @@ name: Cocotb Test
 
 on: 
   push:
+  pull_request:
 
 jobs:
   test:
     runs-on: ubuntu-latest
-
-    strategy:
-      matrix:
-        simulator: [icarus, verilator]
 
     steps:
     - name: Checkout repository
@@ -25,20 +22,7 @@ jobs:
         sudo apt-get update
         sudo apt-get install -y git autoconf g++ make gperf flex bison
 
-    - name: Install Icarus Verilog
-      if: matrix.simulator == 'icarus'
-      run: |
-        git clone https://github.com/steveicarus/iverilog.git
-        cd iverilog
-        git checkout v12-branch
-        sh autoconf.sh
-        ./configure
-        make -j$(nproc)
-        sudo make install
-        iverilog -V
-
     - name: Install Verilator
-      if: matrix.simulator == 'verilator'
       run: |
         git clone https://github.com/verilator/verilator.git
         cd verilator
@@ -58,4 +42,4 @@ jobs:
       env:
         COCOTB_REDUCED_LOG_FMT: 1
       run: |
-        make SIM=${{ matrix.simulator }}
+        make SIM=verilator
